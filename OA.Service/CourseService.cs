@@ -34,6 +34,8 @@ namespace OA.Service
             var studentcourses = studentCourseRepository.GetAll().Where(sc => sc.CourseId == id).FirstOrDefault();
             var courseTeachers = CourseTeacherRepository.GetAll().Where(ct => ct.CourseId == id).FirstOrDefault();
 
+
+            // checking if there any course allocated with teacher or student. if not assigned then we will delete the course
             if (studentcourses == null || courseTeachers == null)
             {
                 courseRepository.Delete(id);
@@ -55,6 +57,8 @@ namespace OA.Service
         public Course GetLocalCourse(int id, int languageId)
         {
             Course course = courseRepository.Get(id);
+
+            // English is the base language. if user change the base language only when we will fetch the local value from database 
             if (languageRepository.Get(languageId).Name != BaseLanguage)
             {
                 // Get local value for Course Name
@@ -97,6 +101,7 @@ namespace OA.Service
 
         public IEnumerable<Course> GetAllLocalCourses(int languageId)
         {
+            // this function will fetch all local values if language is not the base language
             var courses = this.GetCourses().ToList();
 
             List<Course> localcourses = new List<Course>();

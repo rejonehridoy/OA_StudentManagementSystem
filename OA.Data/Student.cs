@@ -22,13 +22,18 @@ namespace OA.Data
         [Required]
         [StringLength(40)]
         public string Name { get; set; }
+
         [Column(TypeName = "date")]
         [DisplayName("Date of Birth")]
         [DataType(DataType.Date)]
         public DateTime DateOfBirth { get; set; }
+
+        [Required]
         [StringLength(50)]
         public string Address { get; set; }
+
         [StringLength(15)]
+        [Required]
         public string Contact { get; set; }
 
         [InverseProperty(nameof(StudentCourse.Student))]

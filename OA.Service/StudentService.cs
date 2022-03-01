@@ -41,6 +41,7 @@ namespace OA.Service
 
         public int DeleteStudentCourse(int id)
         {
+            // this function will delete the mapping student with course
             StudentCourse studentCourse = this.GetStudentCourse(id);
             studentCourseRepository.Delete(studentCourse.Id);
             return studentCourse.StudentId;
@@ -49,6 +50,8 @@ namespace OA.Service
 
         public void DeleteStudentWithCourses(Student student, int languageId)
         {
+
+            // this function will delete the student record. Student course mapping will also need to be deleted in order to delete the student record
             Student studentDeleted = GetStudentDataWithCourses(student.StudentId, languageId);
             foreach (var sc in studentDeleted.StudentCourses)
             {
@@ -69,6 +72,7 @@ namespace OA.Service
 
         public Student GetStudentDataWithCourses(int id, int languageId)
         {
+            // fetching the student record along with allocated courses
             Student student = this.GetLocalStudent(id, languageId);
             studentRepository.GetContext().Entry(student).Collection(c => c.StudentCourses).Query().Where(student => student.StudentId == id).Load();
             return student;
@@ -136,6 +140,7 @@ namespace OA.Service
 
         public List<Course> GetUnassignedCourses(int id)
         {
+            // this function will fetech the unallocated courses for a specific student
             List<Course> Assignedcourses = (from c in courseRepository.GetAll().ToList()
                                             join sc in studentCourseRepository.GetAll().ToList() on c.CourseId equals sc.CourseId
                                             join s in this.GetStudents().ToList() on sc.StudentId equals s.StudentId

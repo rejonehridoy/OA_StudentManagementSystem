@@ -40,6 +40,7 @@ namespace OA.Service
 
         public int DeleteTeacherCourse(int id)
         {
+            // this function will delete the mapping teacher with course
             CourseTeacher courseTeacher = this.GetTeacherCourse(id);
             courseTeacherRepository.Delete(courseTeacher.Id);
             return courseTeacher.TeacherId;
@@ -47,6 +48,7 @@ namespace OA.Service
 
         public void DeleteTeacherWithCourses(Teacher teacher, int languageId)
         {
+            // this function will delete the teacher record. teacher course mapping will also need to be deleted in order to delete the teacher record
             Teacher teacherDeleted = GetTeacherDataWithCourses(teacher.TeacherId, languageId);
             foreach (var sc in teacherDeleted.CourseTeachers)
             {
@@ -57,6 +59,8 @@ namespace OA.Service
 
         public IEnumerable<Teacher> GetAllLocalTeachers(int languageId)
         {
+
+            // this function will fetch all the local values of teacher data according to the language.
             var teachers = this.GetTeachers().ToList();
 
             List<Teacher> localTeachers = new List<Teacher>();
@@ -109,6 +113,7 @@ namespace OA.Service
 
         public Teacher GetTeacherDataWithCourses(int id, int languageId)
         {
+            // fetching the teacher record along with allocated courses
             Teacher teacher = this.GetLocalTeacher(id, languageId);
             teacherRepository.GetContext().Entry(teacher).Collection(c => c.CourseTeachers).Query().Where(teacher => teacher.TeacherId == id).Load();
             return teacher;
@@ -121,6 +126,7 @@ namespace OA.Service
 
         public List<Course> GetUnassignedCourses(int id)
         {
+            // this function will fetech the unallocated courses for a specific teacher
             List<Course> Assignedcourses = (from c in courseRepository.GetAll().ToList()
                                             join ct in courseTeacherRepository.GetAll().ToList() on c.CourseId equals ct.CourseId
                                             join t in this.GetTeachers().ToList() on ct.TeacherId equals t.TeacherId
