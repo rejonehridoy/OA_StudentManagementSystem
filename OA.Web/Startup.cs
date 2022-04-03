@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -26,7 +27,7 @@ namespace OA.Web
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
-            services.AddDbContext<StudentDbContext>();
+            services.AddDbContext<StudentDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("StudentDatabase")));
             services.AddSession(options => {
                 options.IdleTimeout = TimeSpan.FromMinutes(10);//You can set Time   
             });
